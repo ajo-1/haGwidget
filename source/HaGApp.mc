@@ -2,7 +2,7 @@ import Toybox.Application;
 import Toybox.Lang;
 import Toybox.WatchUi;
 
-class FhemApp extends Application.AppBase {
+class HaGApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
@@ -19,7 +19,7 @@ class FhemApp extends Application.AppBase {
     // wechselt. Manche Geraete (Connect IQ 3.3, z.B. Vivoactive 4S) erlauben
     // keine native Menu2-Ansicht direkt als Startansicht eines Widgets.
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        return [new FhemInitialView()] as [WatchUi.Views];
+        return [new HaGInitialView()] as [WatchUi.Views];
     }
 
 }

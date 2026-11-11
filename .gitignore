@@ -2,5 +2,5 @@ resources/settings/properties.xml
 resources/developer_key
 bin/
 resources/settings/properties_private.xml
-FhemGWidget.iq
 resources/settings/properties_private.xml.dis
+*.iq

@@ -1,13 +1,13 @@
 import Toybox.WatchUi;
 import Toybox.Lang;
 
-// Erste Menueebene: eine Zeile pro Geraete-Gruppe.
-class FhemGroupMenu extends WatchUi.Menu2 {
+// Erste Menueebene: eine Zeile pro Gruppe aus der App-Einstellung.
+class HaGGroupMenu extends WatchUi.Menu2 {
 
     function initialize() {
-        Menu2.initialize({ :title => "FHEM" });
+        Menu2.initialize({ :title => "Home" });
 
-        var groups = FhemData.getGroups();
+        var groups = HaGData.getGroups();
         for (var i = 0; i < groups.size(); i += 1) {
             var group = groups[i];
             addItem(new WatchUi.MenuItem(

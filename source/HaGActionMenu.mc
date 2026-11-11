@@ -2,7 +2,7 @@ import Toybox.WatchUi;
 import Toybox.Lang;
 
 // Zweite Menueebene: die Aktionen innerhalb einer Gruppe (z.B. Zu/Auf, An/Aus).
-class FhemActionMenu extends WatchUi.Menu2 {
+class HaGActionMenu extends WatchUi.Menu2 {
 
     function initialize(group as Dictionary) {
         Menu2.initialize({ :title => group.get("label") as String });

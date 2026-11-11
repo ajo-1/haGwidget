@@ -1,85 +1,98 @@
-# FhemGWidget
+# haGwidget
 
-FHEM-Steuerung für Venu 4 (Connect IQ Widget).
+Home-Assistant-Steuerung für die Venu 4 (Connect IQ Widget). Das Widget ruft
+Home-Assistant-Dienste über die REST-API auf (`POST /api/services/<domain>/<dienst>`).
+Es enthält **keine feste Geräteliste**: Welche Entities es steuert, steht
+ausschließlich in den App-Einstellungen.
 
-Ersatz für die alte, unbenutzte FHEM-App von Talkabout, die die Venu 4 noch
-nicht unterstützt. Dieses Widget bietet dieselben Aktionen
-wie deine bisherige Konfiguration:
-
-- Rolladen Alle / Hinten / EG / Schlafzimmer (Zu/Auf)
-- Drucker, Zisterne, Druck (An/Aus)
-- Gastherme (An/Aus)
-
-Es unterstützt **HTTP Basic Auth** direkt (dein `fhem.home.de`
-verlangt ja eine Anmeldung) – Benutzername/Passwort werden sicher über
-die normalen Connect-IQ-App-Einstellungen eingetragen (genau wie bei
-APICall), nicht im Quellcode.
+Nachfolger des FHEM-Widgets (FhemGWidget), mit eigener App-ID.
 
 ## Voraussetzungen
 
-- Garmin Connect IQ SDK (aktuelle Version, mit Venu-4-Unterstützung)
-- VS Code mit der "Monkey C" Extension (empfohlen) **oder** Eclipse mit
-  Connect-IQ-Plugin
-- Ein Connect-IQ-Entwickler-Account auf https://apps.garmin.com/developer
+- Garmin Connect IQ SDK mit Venu-4-Unterstützung
+- VS Code mit der „Monkey C“-Erweiterung
+- Home Assistant, vom Handy aus über **https** erreichbar (die Uhr schickt die
+  Anfragen über das Handy und Garmin Connect)
 
-## Einrichtung
+## Projekt aufsetzen (frischer Klon)
 
- **Einstellungen setzen**: Nach der Installation auf der Uhr (oder via
-   Garmin Express/Connect Mobile, genau wie bei APICall) folgende
-   App-Einstellungen ausfüllen:
-   - **FHEM-URL**: `https://fhem.home.de/fhem`
-   - **Benutzername** / **Passwort**: deine Basic-Auth-Zugangsdaten
-   - **FHEM CSRF-Token**: `csrf_01234567abcd` (oder dein aktueller,
-     falls du ihn zwischenzeitlich geändert hast)
-
-## Bedienung auf der Uhr
-
-Widget öffnen → Gruppe wählen (z.B. "Drucker") → Aktion wählen (z.B.
-"An") → Untertitel zeigt "sende...", danach "OK" oder "Fehler <Code>".
-
-## Geräte/Befehle anpassen (ohne neu zu bauen!)
-
-Die Liste der Geräte/Befehle ist **keine feste Codeliste mehr**, sondern eine
-normale App-Einstellung ("Geraete/Befehle") – du kannst sie also jederzeit in
-Garmin Express oder der Garmin-Connect-App ändern, ohne die App neu zu bauen
-oder hochzuladen, genau wie URL/Benutzer/Passwort/CSRF.
-
-Format (ein Eintrag pro Zeile/Aktion, mit `;` getrennt):
+`resources/settings/properties.xml` ist nicht im Repository. Einmalig kopieren:
 
 ```
-Gruppe|Beschriftung|FHEM-Geraet|Befehl;Gruppe|Beschriftung|FHEM-Geraet|Befehl;...
+copy resources\settings\properties_example.xml.dis resources\settings\properties.xml
 ```
 
-Beispiel für zwei Aktionen in der Gruppe "Drucker":
+Außerdem wird der Entwicklerschlüssel `resources/developer_key` gebraucht
+(ebenfalls nicht im Repository).
+
+## Einrichtung in der App
+
+1. In Home Assistant ein Zugriffstoken erzeugen: Profil (unten links) →
+   Sicherheit → „Langlebige Zugriffstokens“ → Token erstellen. Das Token wird nur
+   einmal angezeigt.
+2. In der Garmin-Connect-App (oder Garmin Express) die Einstellungen des Widgets
+   ausfüllen:
+   - **Home-Assistant-URL**, z. B. `https://hass.example.org`
+   - **Zugriffstoken** (das Token aus Schritt 1)
+   - **Aktionen** (siehe unten)
+
+Das Token steht nie im Quellcode oder im Repository, sondern nur in den
+App-Einstellungen.
+
+## Aktionen konfigurieren (ohne neu zu bauen)
+
+Format, eine Aktion pro Eintrag, mit `;` getrennt:
 
 ```
-Drucker|An|Power_drucker|on;Drucker|Aus|Power_drucker|off
+Gruppe|Beschriftung|entity_id|Befehl;Gruppe|Beschriftung|entity_id|Befehl;...
 ```
 
-Aktionen mit derselben Gruppe werden automatisch zusammengefasst (Reihenfolge
-= Reihenfolge im Text). Zum Umsortieren einfach die Textstücke im Feld
-verschieben; zum Hinzufügen ein weiteres `Gruppe|Label|Geraet|Befehl` per `;`
-anhängen. Ist das Feld leer oder fehlerhaft, nutzt die App automatisch die
-eingebaute Standardliste (deine ursprüngliche Konfiguration), damit nie
-"nichts" passiert.
-
-Die Rohliste (falls du sie mal direkt im Code brauchst oder zurücksetzen
-willst) steht weiterhin als Fallback in `source/FhemData.mc`.
-
-## Dateien in diesem Paket
+Beispiel (Platzhalter, bitte durch eigene Entities ersetzen):
 
 ```
-manifest.xml                      – Basis-Manifest (Permissions, Produkte)
-monkey.jungle                     – Jungle-Datei
-resources/strings/strings.xml     – Texte (App-Name, Einstellungs-Labels)
-resources/settings/properties.xml – App-Einstellungen (URL/User/Pass/CSRF)
-resources/drawables/drawables.xml – Icon-Deklaration
-resources/drawables/launcher_icon.png – einfaches Platzhalter-Icon
-source/FhemApp.mc                 – App-Einstiegspunkt
-source/FhemData.mc                – Geräte-/Befehlsliste (hier anpassen!)
-source/FhemCommands.mc            – HTTP-Request inkl. Basic Auth
-source/FhemGroupMenu.mc           – 1. Menüebene (Gruppen)
-source/FhemGroupMenuDelegate.mc   – Klick-Logik 1. Ebene
-source/FhemActionMenu.mc          – 2. Menüebene (Aktionen)
-source/FhemActionMenuDelegate.mc  – Klick-Logik 2. Ebene, sendet Befehl
+Lampe|An|light.beispiel|on;Lampe|Aus|light.beispiel|off;Rolladen|Zu|cover.beispiel|close;Rolladen|Auf|cover.beispiel|open
+```
+
+Aktionen mit gleicher Gruppe werden zusammengefasst (Reihenfolge wie im Text).
+
+Befehle:
+
+| Befehl | Home-Assistant-Dienst |
+|---|---|
+| `on` / `off` | `turn_on` / `turn_off` (bei `cover.*`: `open_cover` / `close_cover`) |
+| `open` / `close` / `stop` | `open_cover` / `close_cover` / `stop_cover` |
+| `toggle` | `toggle` |
+| `domain.dienst` | unverändert, z. B. `script.turn_on`, `button.press` |
+| anderer Name | wird als Dienst der Entity-Domain verwendet |
+
+Ist das Feld leer, zeigt das Widget nur „Nicht konfiguriert“ und sendet nichts.
+
+## Bedienung
+
+Widget öffnen → Gruppe wählen → Aktion wählen. Der Untertitel zeigt „sende...“,
+danach „OK“ oder einen Fehlertext (z. B. „Token ungueltig“, „Entity/Befehl?“).
+
+## Über Garmin Connect installieren (Beta/Store)
+
+1. In VS Code: Befehlspalette → „Monkey C: Export Project“ → ergibt `haGwidget.iq`
+   (liegt im gewählten Ordner, wird nicht eingecheckt).
+2. Auf https://apps.garmin.com/developer die Datei hochladen, Name und Beschreibung
+   eintragen, als Beta bzw. Store-App einreichen.
+3. Nach der Freigabe lässt sich die App über Garmin Connect / Connect IQ installieren;
+   die Einstellungen (URL, Token, Aktionen) werden dort pro Nutzer eingetragen.
+
+## Dateien
+
+```
+manifest.xml                          – Manifest (App-ID, Permission Communications, Produkte)
+monkey.jungle                         – Jungle-Datei
+resources/strings/strings.xml         – Texte
+resources/settings/properties.xml     – App-Einstellungen (URL, Token, Aktionen)
+source/HaGApp.mc                      – Einstiegspunkt
+source/HaGInitialView.mc              – leere Startansicht, wechselt zum Menü
+source/HaGData.mc                     – Einstellung lesen und in Gruppen zerlegen
+source/HaGCommands.mc                 – REST-Aufruf an Home Assistant
+source/HaGGroupMenu*.mc               – 1. Menüebene (Gruppen)
+source/HaGActionMenu*.mc              – 2. Menüebene (Aktionen, sendet Befehl)
+source/IdleTimer.mc                   – beendet das Widget nach 30 s ohne Bedienung
 ```

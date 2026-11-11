@@ -6,14 +6,14 @@ import Toybox.Lang;
 // keine native Menu2-Ansicht direkt als Startansicht eines Widgets
 // erlauben ("Unexpected Type Error" / "Failed to start CIQ Application").
 // Diese leere View wechselt sofort zur eigentlichen Gruppen-Menue-Ansicht.
-class FhemInitialView extends WatchUi.View {
+class HaGInitialView extends WatchUi.View {
 
     function initialize() {
         View.initialize();
     }
 
     function onShow() as Void {
-        WatchUi.pushView(new FhemGroupMenu(), new FhemGroupMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
+        WatchUi.pushView(new HaGGroupMenu(), new HaGGroupMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
     }
 
 }

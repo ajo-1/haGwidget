@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <iq:manifest xmlns:iq="http://www.garmin.com/xml/connectiq" version="1">
-    <iq:application entry="FhemApp" id="ad012c20-e5fb-49f6-9a0a-cb5578192eb6" launcherIcon="@Drawables.LauncherIcon" minSdkVersion="3.2.0" name="@Strings.AppName" type="widget">
+    <iq:application entry="HaGApp" id="e4d1fc6f-8660-4d84-b82a-27980c19a242" launcherIcon="@Drawables.LauncherIcon" minSdkVersion="3.2.0" name="@Strings.AppName" type="widget">
         <iq:products>
             <iq:product id="venu441mm"/>
             <iq:product id="venu445mm"/>

@@ -1,10 +1,8 @@
 <resources>
     <strings>
-        <string id="AppName">FhemGWidget</string>
-        <string id="SettingBaseUrl">FHEM-URL (z.B. https://openvas.home.2cv-6.de/fhem)</string>
-        <string id="SettingUser">Benutzername (Basic Auth)</string>
-        <string id="SettingPass">Passwort (Basic Auth)</string>
-        <string id="SettingCsrf">FHEM CSRF-Token</string>
-        <string id="SettingActions">Geraete/Befehle (Format: Gruppe|Label|Geraet|Befehl;...)</string>
+        <string id="AppName">haGwidget</string>
+        <string id="SettingBaseUrl">Home-Assistant-URL (z.B. https://hass.example.org)</string>
+        <string id="SettingToken">Zugriffstoken (Long-Lived Access Token)</string>
+        <string id="SettingActions">Aktionen (Format: Gruppe|Label|Entity|Befehl;...)</string>
     </strings>
 </resources>
